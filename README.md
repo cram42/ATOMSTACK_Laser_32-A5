@@ -1,4 +1,5 @@
-#Introduction
+# Introduction
+
 Bought an ATOMSTACK A5 Pro Plus 40W from AliExpress
 https://www.aliexpress.com/item/1005003652763657.html
 
@@ -7,7 +8,7 @@ Let's crack it open and see what the board is.
 
 ----------------
 
-# BOARD
+# Board
 
 ![Board Overview](https://github.com/cram42/ATOMSTACK_Laser_32-A5/raw/main/Images/BoardOverview.jpg)
 
@@ -25,7 +26,7 @@ At a glance, unused features:
 
 ----------------
 
-# PROCESSOR
+# Processor
 
 ![ESP32](https://github.com/cram42/ATOMSTACK_Laser_32-A5/raw/main/Images/ESP32.jpg)
 
@@ -47,7 +48,7 @@ OK. Let's make a backup.
 
 ----------------
 
-# DRIVERS
+# Drivers
 
 ![4988ET](https://github.com/cram42/ATOMSTACK_Laser_32-A5/raw/main/Images/4988ET.jpg)
 
@@ -55,7 +56,7 @@ OK. Let's make a backup.
 
 ----------------
 
-# OTHER CHIPS
+# Other Chips
 
 ![74HC595 & HC125](https://github.com/cram42/ATOMSTACK_Laser_32-A5/raw/main/Images/74HC595_HC125.jpg)
 
@@ -149,7 +150,7 @@ Single-bit noninverting bus transceiver
 
 ----------------
 
-# BOARD PINS
+# Board Pins
 
 | Location | Function           |  # | Notes | Destination                                                                  |
 | :-       | :-                 | -: | :-    | :-                                                                           |
