@@ -61,7 +61,40 @@ OK. Let's make a backup.
 
 ## 74HC595
 
+Texas Instruments SNx4HC595
+8-bit, serial-in, parallel-out shift register
 
+```
+       /-----------\
+ QB ---|1 O      16|--- Vcc
+ QC ---|2        15|--- QA
+ QD ---|3        14|--- Serial Input
+ QE ---|4        13|--- Output Enable
+ QF ---|5        12|--- Register Clock
+ QG ---|6        11|--- Storage Clock
+ QH ---|7        10|--- Storage Clear
+GND ---|8         9|--- QH'
+       \-----------/
+```
+
+|  # | Function          | Destination                                      |
+| -: | :-                | :-                                               |
+|  1 | QB                | 4988 (X) Pin 16 (Step)                           |
+|  2 | QC                | 4988 (X) Pin 19 (Dir)                            |
+|  3 | QD                | ???                                              |
+|  4 | QE                | ???                                              |
+|  5 | QF                | 4988 (Y) Pin 16 (Step)                           |
+|  6 | QG                | 4988 (Y) Pin 19 (Dir)                            |
+|  7 | QH                | HDMI 13                                          |
+|  8 | GND               | GND                                              |
+|  9 | QH'               | ???                                              |
+| 10 | Storage Clear     | ???                                              |
+| 11 | Storage Clock     | ESP32 Pin 25 (GPIO16, RXD_2)                     |
+| 12 | Register Clock    | ESP32 Pin 27 (GPIO17, TXD_2)                     |
+| 13 | Output Enable     | ???                                              |
+| 14 | Serial Data Input | ESP32 Pin 42 (GPIO21, VSPI_HD, SDA)              |
+| 15 | QA                | 4988 (Both) Pin 2 (Enable) - Pulled up to 3.3V   |
+| 16 | Vcc               | 3.3V                                             |
 
 ## HC125
 
@@ -69,39 +102,57 @@ Texas Instruments SNx4HC125
 Quadruple Buffers with 3-State Outputs
 
 ```
-                                                            /---------------\
-                                            GND --- EN1 ----|1 O          14|---- Vcc -- 3.3V
-            ESP32 Pin 34 (GPIO5, V_SPI_CS0, SS) ---- I1 ----|2            13|---- EN4 -- GND
-                                        ? 3 mid ---- O1 ----|3            12|---- I4 --- ESP32 Pin 27 (GPIO17, TXD_2) [74HC595 Register Clock]
-                                            GND --- EN2 ----|4            11|---- O4 --- HDMI 3
-ESP32 Pin 14 (GPIO25, ADC2_8, RTC GPIO6, DAC 1) ---- I2 ----|5            10|---- EN3 -- GND
-                                        HDMI 12 ---- O2 ----|6             9|---- I3 --- ESP32 Pin 25 (GPIO16, RXD_2) [74HC595 Storage Clock]
-                                            GND --- GND ----|7             8|---- O3 --- HDMI 6
-                                                            \---------------/
+                            /---------------\
+Channel 1, Output Enable ---|1 O          14|--- Vcc
+      Channel 1, Input A ---|2            13|--- Channel 4, Output Enable
+     Channel 1, Output Y ---|3            12|--- Channel 4, Input A
+Channel 2, Output Enable ---|4            11|--- Channel 4, Output Y
+      Channel 2, Input A ---|5            10|--- Channel 3, Output Enable
+     Channel 2, Output Y ---|6             9|--- Channel 3, Input A
+                     GND ---|7             8|--- Channel 3, Output Y
+                            \---------------/
 ```
 
+|  # | Function                 | Destination                                           |
+| -: | :-                       | :-                                                    |
+|  1 | Channel 1, Output Enable | GND                                                   |
+|  2 | Channel 1, Input A       | ESP32 Pin 34 (GPIO5, V_SPI_CS0, SS)                   |
+|  3 | Channel 1, Output Y      | ? 3 mid
+|  4 | Channel 2, Output Enable | GND                                                   |
+|  5 | Channel 2, Input A       | ESP32 Pin 14 (GPIO25, ADC2_8, RTC GPIO6, DAC 1)       |
+|  6 | Channel 2, Output Y      | HDMI 12                                               |
+|  7 | GND                      | GND                                                   |
+|  8 | Channel 3, Output Y      | HDMI 6                                                |
+|  9 | Channel 3, Input A       | ESP32 Pin 25 (GPIO16, RXD_2) [74HC595 Storage Clock]  |
+| 10 | Channel 3, Output Enable | GND                                                   |
+| 11 | Channel 4, Output Y      | HDMI 3                                                |
+| 12 | Channel 4, Input A       | ESP32 Pin 27 (GPIO17, TXD_2) [74HC595 Register Clock] |
+| 13 | Channel 4, Output Enable | GND                                                   |
+| 14 | Vcc                      | 3.3V                                                  |
+
 ## TA5
+
+Texas Instruments SN74LVC1T45
+Single-bit noninverting bus transceiver
 
 ![TA5 1](https://github.com/cram42/ATOMSTACK_Laser_32-A5/raw/main/Images/TA5_1.jpg)
 ![TA5 2](https://github.com/cram42/ATOMSTACK_Laser_32-A5/raw/main/Images/TA5_2.jpg)
 
+|  # | Function | Destination                                   |
+| -: | :-       | :-                                            |
+|  1 | Vcca     | 5V                                            |
+|  2 | GND      | GND                                           |
+|  3 | A        | TTL Header +                                  |
+|  4 | B        | ESP32 Pin 39 (GPIO22, V_SPI_WP, SCL, RTS 0)   |
+|  5 | DIR      | ???                                           |
+|  6 | Vccb     | 3.3V                                          |
+
 ----------------
 
-# PINS
+# BOARD PINS
 
 | Location | Function           |  # | Notes | Destination                                                                  |
 | :-       | :-                 | -: | :-    | :-                                                                           |
-| 74HC595  | QA                 | 15 |       | 4988 (Both) Pin 2 (Enable) -> Pulled to 3.3V                                 |
-| 74HC595  | QB                 |  1 |       | 4988 (X) Pin 16 (Step)                                                       |
-| 74HC595  | QC                 |  2 |       | 4988 (X) Pin 19 (Dir)                                                        |
-| 74HC595  | QD                 |  3 |       | ???                                                                          |
-| 74HC595  | QE                 |  4 |       | ???                                                                          |
-| 74HC595  | QF                 |  5 |       | 4988 (Y) Pin 16 (Step)                                                       |
-| 74HC595  | QG                 |  6 |       | 4988 (Y) Pin 19 (Dir)                                                        |
-| 74HC595  | QH                 |  7 |       | HDMI 13                                                                      |
-| 74HC595  | Storage Clock      | 11 |       | ESP32 Pin 25 (GPIO16, RXD_2)                                                 |
-| 74HC595  | Register Clock     | 12 |       | ESP32 Pin 27 (GPIO17, TXD_2)                                                 |
-| 74HC595  | Serial Data Input  | 14 |       | ESP32 Pin 42 (GPIO21, VSPI_HD, SDA)                                          |
 | Probe Header (Left)  |        |  S | Pull Up/Down 3.3V/GND | ESP32 Pin 22 (GPIO2, ADC2_2, HSPI_WP0, Touch2, RTC GPIO12)   |
 | Probe Header (Right) |        |  S |       | ESP32 Pin 10 (GPIO34, ADC1_6, RTC GPIO4, Input Only)                         |
 | Blue Y Header | Y Endstop     |  S |       | ESP32 Pin 11 (GPIO35, ADC1_7, RTC GPIO5, Input Only)                         |
@@ -111,7 +162,6 @@ ESP32 Pin 14 (GPIO25, ADC2_8, RTC GPIO6, DAC 1) ---- I2 ----|5            10|---
 | I2C Header    |               |  3 |       | GND                                                                          |
 | I2C Header    |               |  4 |       | 3.3V                                                                         |
 | TTL Header    | Laser Control |  + |       | TA5 Bus Tranceiver Pin 3 (A) @ 5V                                            |
-| TA5           | (B) @ 3.3V    |  4 |       | ESP32 Pin 39 (GPIO22, V_SPI_WP, SCL, RTS 0)                                  |
 | SD            | Card Detect   |    |       | LED                                                                          |
 | SD            | DAT1          |  8 |       | NC                                                                           |
 | SD            | DAT0          |  7 |       | ESP32 Pin 18 (GPIO12, ADC2_5, HSPI_Q, Touch5, RTC GPIO15)                    |
@@ -123,7 +173,25 @@ ESP32 Pin 14 (GPIO25, ADC2_8, RTC GPIO6, DAC 1) ---- I2 ----|5            10|---
 | SD            | DAT2          |  1 |       | NC                                                                           |
 | Reset Header  |               |  L |       | ESP32 Pin 9 (EN)                                                             |
 | Reset Header  |               |  R |       | GND                                                                          |
-
+| HDMI          |               |  1 | (Bottom) | ???
+| HDMI          |               |  2 |       | ???
+| HDMI          |               |  3 |       | HC125 11 (Output 4)
+| HDMI          |               |  4 |       | ???
+| HDMI          |               |  5 |       | ???
+| HDMI          |               |  6 |       | HC125 8 (Output 3)
+| HDMI          |               |  7 |       | ???
+| HDMI          |               |  8 |       | ???
+| HDMI          |               |  9 |       | ???
+| HDMI          |               | 10 |       | ???
+| HDMI          |               | 11 |       | ???
+| HDMI          |               | 12 |       | HC125 6 (Output 2)
+| HDMI          |               | 13 |       | 74HC595 7 (QH)
+| HDMI          |               | 14 |       | ???
+| HDMI          |               | 15 |       | ???
+| HDMI          |               | 16 |       | 3.3V
+| HDMI          |               | 17 |       | GND
+| HDMI          |               | 18 |       | 5V
+| HDMI          |               | 19 |       | ???
 
 ----------------
 
@@ -133,25 +201,3 @@ ESP32 Pin 14 (GPIO25, ADC2_8, RTC GPIO6, DAC 1) ---- I2 ----|5            10|---
 - SD Card is running in SPI mode
 
 ----------------
-
-
-
-HDMI 1 (Bottom) -   
-HDMI 2          -   
-HDMI 3          -   HC125 11 (Output 4)
-HDMI 4          -   
-HDMI 5          -   
-HDMI 6          -   HC125 8 (Output 3)
-HDMI 7          -   
-HDMI 8          -   
-HDMI 9          -   
-HDMI 10         -   
-HDMI 11         -   
-HDMI 12         -   HC125 6 (Output 2)
-HDMI 13         -   74HC595 7 (QH)
-HDMI 14         -   
-HDMI 15         -   
-HDMI 16         -   3.3V
-HDMI 17         -   GND
-HDMI 18         -   5V
-HDMI 19         -   
