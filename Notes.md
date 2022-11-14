@@ -49,7 +49,7 @@ OK. Let's make a backup.
 
 # DRIVERS
 
-![4988ET]()
+![<img src="https://github.com/cram42/ATOMSTACK_Laser_32-A5/raw/main/Images/4988ET.jpg" width="200">](https://github.com/cram42/ATOMSTACK_Laser_32-A5/raw/main/Images/4988ET.jpg)
 
 **"4988ET"**
 
